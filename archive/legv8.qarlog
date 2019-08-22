@@ -1,0 +1,26 @@
+Quartus Prime Archive log --	C:/Users/Renato/Documents/poli/orgarq2/Legv8/archive/legv8.qarlog
+
+Archive:	C:/Users/Renato/Documents/poli/orgarq2/Legv8/archive/legv8.qar
+Date:		Thu Aug 22 01:28:55 2019
+Quartus Prime		18.1.0 Build 625 09/12/2018 SJ Lite Edition
+
+	=========== Files Selected: ===========
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/alu.vhd
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/alu_control.vhd
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/control.vhd
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/fluxo_de_dados.vhd
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/legv8.qpf
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/legv8.qsf
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/legv8.vhd
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/mux2to1.vhd
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/ram.vhd
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/reg.vhd
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/registerFile.vhd
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/rom.vhd
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/shiftleft2.vhd
+C:/Users/Renato/Documents/poli/orgarq2/Legv8/signExtend.vhd
+c:/intelfpga_lite/18.1/quartus/bin64/assignment_defaults.qdf
+	======= Total: 15 files to archive =======
+
+	================ Status: ===============
+All files archived successfully.
