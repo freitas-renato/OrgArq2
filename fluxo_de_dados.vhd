@@ -10,16 +10,16 @@ entity fluxo_de_dados is
 
         -- From UC
         reg2loc:        in bit;
-        uncond_branch:  in bit;
+        uncondBranch:   in bit;
         branch:         in bit;
         mem_wr:         in bit;
-        mem_to_reg:     in bit;
-        alu_function:   in bit_vector(3 downto 0);
-        alu_src:        in bit;
-        reg_write:      in bit;
+        memToReg:       in bit;
+        aluCtl:         in bit_vector(3 downto 0);
+        aluSrc:         in bit;
+        regWrite:       in bit;
 
         -- To UC
-        opcode: out bit_vector(10 downto 0)
+        instruction31to21: out bit_vector(10 downto 0)
     );
 end fluxo_de_dados;
 
@@ -135,24 +135,24 @@ begin
 
     -- sinal4bits <= "0000000000000000000000000000000000000000000000000000000000000100";
 
-    SelecaoMux1 <= uncond_branch or (branch and ZeroAlu);
+    SelecaoMux1 <= uncondBranch or (branch and ZeroAlu);
 
-    opcode <= IMemOut(31 downto 21);
+    instruction31to21 <= IMemOut(31 downto 21);
     
     -- ALUs e Somadores
     add1 : alu port map(A => PC, B => SL2_Add1, F => Add1Out, S => "0010", Z => open);
-    alu1 : alu port map(A => Reg_Alu, B => Mux2Out, F => AluOut, S => alu_function, Z => ZeroAlu);
+    alu1 : alu port map(A => Reg_Alu, B => Mux2Out, F => AluOut, S => aluCtl, Z => ZeroAlu);
     add2 : alu port map(A => PC, B => sinal4bits, F => Add2Out, S => "0010", Z => open);
     
     -- MUX
     mux1 : mux2to1 generic map(64) port map(s => SelecaoMux1, a => Add2Out, b => Add1Out, o => Mux1Out);
-    mux2 : mux2to1 generic map(64) port map(s => alu_src, a => Reg_Mux2, b => SEOut, o => Mux2Out);
-    mux3 : mux2to1 generic map(64) port map(s => mem_to_reg, a => DMemOut, b => AluOut, o => Mux3Out);
+    mux2 : mux2to1 generic map(64) port map(s => aluSrc, a => Reg_Mux2, b => SEOut, o => Mux2Out);
+    mux3 : mux2to1 generic map(64) port map(s => memToReg, a => DMemOut, b => AluOut, o => Mux3Out);
     mux4 : mux2to1 generic map(5) port map(s => reg2loc, a => IMemOut(20 downto 16), b => IMemOut(4 downto 0), o => Mux4Out);
     
     -- Registradores
     programCounter : reg generic map(64) port map(clock => clock, reset => '0', load => '1', d => Mux1Out, q => PC);
-    regFile : registerFile port map(Read1 => IMemOut(9 downto 5), Read2 => Mux4Out, WriteReg => IMemOut(4 downto 0), WriteData => Mux3Out, RegWrite => reg_write, clock => clock, DataOut1 => Reg_Alu, DataOut2 => Reg_Mux2); -- criar banco de regs
+    regFile : registerFile port map(Read1 => IMemOut(9 downto 5), Read2 => Mux4Out, WriteReg => IMemOut(4 downto 0), WriteData => Mux3Out, RegWrite => regWrite, clock => clock, DataOut1 => Reg_Alu, DataOut2 => Reg_Mux2); -- criar banco de regs
     
     SE: signExtend port map(i => IMemOut, o => SEOut);
     SL2 : shiftleft2 port map(i => SEOut, o => SL2_Add1);

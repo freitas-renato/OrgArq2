@@ -17,16 +17,16 @@ architecture estrutural of legv8 is
 
             -- From UC
             reg2loc:        in bit;
-            uncond_branch:  in bit;
+            uncondBranch:   in bit;
             branch:         in bit;
             mem_wr:         in bit;
-            mem_to_reg:     in bit;
-            alu_function:   in bit_vector(3 downto 0);
-            alu_src:        in bit;
-            reg_write:      in bit;
+            memToReg:       in bit;
+            aluCtl:         in bit_vector(3 downto 0);
+            aluSrc:         in bit;
+            regWrite:       in bit;
 
             -- To UC
-            opcode: out bit_vector(10 downto 0)
+            instruction31to21: out bit_vector(10 downto 0)
         );
     end component;
 
@@ -40,55 +40,55 @@ architecture estrutural of legv8 is
 
             -- To FD
             reg2loc:        out bit;
-            uncond_branch:  out bit;
+            uncondBranch:   out bit;
             branch:         out bit;
             mem_wr:         out bit;
-            mem_to_reg:     out bit;
-            alu_function:   out bit_vector(3 downto 0);
-            alu_src:        out bit;
-            reg_write:      out bit
+            memToReg:       out bit;
+            aluCtl:         out bit_vector(3 downto 0);
+            aluSrc:         out bit;
+            regWrite:       out bit
         );
     end component;
 
     signal opcode: bit_vector(10 downto 0);
     signal reg2loc: bit;
-    signal uncond_branch: bit;
+    signal uncondBranch: bit;
     signal branch: bit;
     signal mem_wr: bit;
-    signal mem_to_reg: bit;
-    signal alu_function: bit_vector(3 downto 0);
-    signal alu_src: bit;
-    signal reg_write: bit;
+    signal memToReg: bit;
+    signal aluCtl: bit_vector(3 downto 0);
+    signal aluSrc: bit;
+    signal regWrite: bit;
 
 begin
     FD: fluxo_de_dados port map(
         clock =>            clk,
         reset =>            rst,
 
-        opcode =>           opcode,
         reg2loc =>          reg2loc,
-        uncond_branch =>    uncond_branch,
+        uncondBranch =>     uncondBranch,
         branch  =>          branch,
         mem_wr =>           mem_wr,
-        mem_to_reg =>       mem_to_reg,
-        alu_function =>     alu_function,
-        alu_src =>          alu_src,
-        reg_write =>        reg_write
+        memToReg =>         memToReg,
+        aluCtl =>           aluCtl,
+        aluSrc =>           aluSrc,
+        regWrite =>         regWrite,
+        instruction31to21 => opcode
     );
 
     UC: control_unit port map(
-        clk =>            clk,
-        rst =>            rst,
+        clk =>              clk,
+        rst =>              rst,
 
         opcode =>           opcode,
         reg2loc =>          reg2loc,
-        uncond_branch =>    uncond_branch,
+        uncondBranch =>     uncondBranch,
         branch  =>          branch,
         mem_wr =>           mem_wr,
-        mem_to_reg =>       mem_to_reg,
-        alu_function =>     alu_function,
-        alu_src =>          alu_src,
-        reg_write =>        reg_write
+        memToReg =>         memToReg,
+        aluCtl =>           aluCtl,
+        aluSrc =>           aluSrc,
+        regWrite =>         regWrite
     );
 
 end architecture;
