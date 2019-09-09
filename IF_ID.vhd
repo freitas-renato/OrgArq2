@@ -5,11 +5,11 @@ entity IF_ID is
 	port(
 		clock : in bit;
 		
-		-- From pipeline
+		-- Entradas de dados
 		I_IMem : in bit_vector(31 downto 0);
 		I_PC : in bit_vector(63 downto 0);
 		
-		-- To the next stage
+		-- Entradas de controle
 		O_IMem : out bit_vector(31 downto 0);
 		O_PC : out bit_vector(63 downto 0)
 	);
