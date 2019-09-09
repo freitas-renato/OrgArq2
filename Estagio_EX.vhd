@@ -6,24 +6,36 @@ use std.textio.all;
 entity Estagio_EX is
 	port(
 	
-		-- From pipeline/UC
-		PC : in bit_vector(63 downto 0);
-		Reg_Alu : in bit_vector(63 downto 0);
-		Reg_Mux2In : in bit_vector(63 downto 0);
-		SEOut : in bit_vector(63 downto 0);
-		Instruction31to21In : in bit_vector(10 downto 0);
-		Instruction4to0In : in bit_vector(4 downto 0);
-		SelecaoALU : in bit_vector(3 downto 0);
-		alu_Src : in bit;
+		-- Do pipeline
+		PC : 							in bit_vector(63 downto 0);
+		Reg_Alu : 					in bit_vector(63 downto 0);
+		Reg_Mux2In : 				in bit_vector(63 downto 0);
+		SEOut : 						in bit_vector(63 downto 0);
+		Instruction31to21In : 	in bit_vector(10 downto 0);
+		Instruction4to0In : 		in bit_vector(4 downto 0);
 		
-		-- Saidas
-		Add1Out : out bit_vector(63 downto 0);
-		AluOut : out bit_vector(63 downto 0);
-		ZeroAlu : out bit;
-		Reg_Mux2 : out bit_vector(63 downto 0);
-		Instruction4to0 : out bit_vector(4 downto 0);
-		Instruction31to21 : out bit_vector(10 downto 0)
+		-- Da UC para o estagio EX
+		SelecaoALU : 	in bit_vector(3 downto 0);
+		alu_Src : 		in bit;
 		
+		-- Da UC para os estagios seguintes
+		I_branch : 		in bit;
+		I_mem_wr : 		in bit;
+		I_memToReg: 	in bit;
+		I_regWrite:    in bit;
+		
+		-- Saidas de dados
+		Add1Out : 				out bit_vector(63 downto 0);
+		AluOut : 				out bit_vector(63 downto 0);
+		ZeroAlu : 				out bit;
+		Reg_Mux2 : 				out bit_vector(63 downto 0);
+		Instruction4to0 : 	out bit_vector(4 downto 0);
+		
+		-- Saidas de controle
+		O_branch : 		out bit;
+		O_mem_wr : 		out bit;
+		O_memToReg: 	out bit;
+		O_regWrite:    out bit
 	);
 end Estagio_EX;
 
@@ -86,13 +98,17 @@ begin
 	-- ALU numero 1 (vulgo imagem do monociclo)
 	alu1 : alu port map(A => Reg_Alu, B => Mux2Out, F => signalAluOut, S => signalSelecaoALU, Z => signalZeroAlu);
 
-	-- Saidas
+	-- Saidas de dados
 	Instruction4to0 <= Instruction4to0In;
 	Reg_Mux2 <= Reg_Mux2In;
-	Instruction31to21 <= Instruction31to21In;
 	Add1Out <= signalAdd1Out;
-	ZeroAlu <= signalZeroAlu;
 	AluOut <= signalAluOut;
 	
+	-- Saidas de controle
+	ZeroAlu <= signalZeroAlu;
+	O_branch <= I_branch;
+	O_mem_wr <= I_mem_wr;
+	O_memToReg <= I_memToReg;
+	O_regWrite <= I_regWrite;
 
 end E_EX;

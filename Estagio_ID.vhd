@@ -7,11 +7,11 @@ entity Estagio_ID is
 		clock : in bit;
 		reset : in bit;
 		
-		-- From UC, for ID stage
+		-- Da UC, para o estagio ID
 		Reg2Loc : in bit;
 		RegWrite : in bit;
 		
-		-- From UC, for next stages
+		-- Da UC, para os proximos estagios
 		I_branch : 		 in bit;
 		I_mem_wr:         in bit;
 		I_memToReg:       in bit;
@@ -19,18 +19,18 @@ entity Estagio_ID is
 		I_aluSrc:         in bit;
 		I_regWrite:       in bit;
 		
-		-- From previous states
+		-- De estagios anteriores
 		I_PC : in bit_vector(63 downto 0);
 		instruction : in bit_vector(31 downto 0);
 		
-		-- From further states
+		-- De estagios adiante
 		Mux3Out : in bit_vector(63 downto 0);
 		
-		-- To UC and next stage
+		-- Para a UC e para o proximo estagio
 		instruction31to21: out bit_vector(10 downto 0);
 		
-		-- To next stage
-		-- control
+		-- Para os proximos estagios
+		-- Controle
 		O_branch : 		 out bit;
 		O_mem_wr:         out bit;
 		O_memToReg:       out bit;
@@ -38,7 +38,7 @@ entity Estagio_ID is
 		O_aluSrc:         out bit;
 		O_regWrite:       out bit;
 		
-		-- data
+		-- Dados
 		O_PC : out bit_vector(63 downto 0);
 		Reg_Alu : out bit_vector(63 downto 0);
 		Reg_Mux2 : out bit_vector(63 downto 0);
@@ -59,6 +59,7 @@ architecture ID of Estagio_ID is
             WriteData:  in bit_vector(63 downto 0); 
             RegWrite:   in bit; --sinais de controle
             clock:      in bit;
+				reset:		in bit;
             DataOut1:   out bit_vector(63 downto 0);
             DataOut2:   out bit_vector(63 downto 0)
         );
@@ -95,7 +96,7 @@ architecture ID of Estagio_ID is
 	SE : signExtend port map(i => instruction, o => SEOut);
 	
 	--register file
-	regFile : registerFile port map(Read1 => instruction(9 downto 5), Read2 => Mux4Out, WriteReg => instruction(4 downto 0), WriteData => Mux3Out, RegWrite => RegWrite, clock => clock, DataOut1 => Reg_Alu, DataOut2 => Reg_Mux2);
+	regFile : registerFile port map(Read1 => instruction(9 downto 5), Read2 => Mux4Out, WriteReg => instruction(4 downto 0), WriteData => Mux3Out, RegWrite => RegWrite, clock => clock, reset => reset, DataOut1 => Reg_Alu, DataOut2 => Reg_Mux2);
 	
 	-- I/O mapping
 	instruction31to21 <= instruction(31 downto 21);

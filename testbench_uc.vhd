@@ -18,7 +18,7 @@ architecture uc_tb of teste_uc is
             branch:         out bit;
             mem_read:       out bit;
             mem_to_reg:     out bit;
-            alu_funtion:    out bit_vector(3 downto 0);
+            alu_function:    out bit_vector(3 downto 0);
             mem_write:      out bit;
             alu_src:        out bit;
             reg_write:      out bit
@@ -26,7 +26,7 @@ architecture uc_tb of teste_uc is
     end component;
 
     signal reg2loc, uncond_branch, branch, mem_read, mem_to_reg, mem_write, alu_src, reg_write: bit := '0';
-    signal alu_funtion: bit_vector(3 downto 0) := "0000";
+    signal alu_function: bit_vector(3 downto 0) := "0000";
 
     type opcode_range_t is array (natural range <>) of bit_vector(10 downto 0);
 

@@ -6,30 +6,30 @@ entity Estagio_MEM is
 	port(
 		clock : in bit;
 	
-		-- From UC, for MEM stage
+		-- Da UC, para o estagio MEM
 		mem_wr : in bit;
 		branch : in bit;
 		
-		-- From UC, for next stage
+		-- Da UC, para o estagio seguinte
 		I_RegWrite : in bit;
 		
-		-- From previous state
+		-- De estagios anteriores
 		I_AluOut : in bit_vector(63 downto 0);
 		Reg_Mux2 : in bit_vector(63 downto 0);
 		ZeroAlu : in bit;
 		I_Add1Out : in bit_vector(63 downto 0);
 		I_instruction4to0 : in bit_vector(4 downto 0);
 
-		-- To UC
+		-- Para a UC
 		PC_src : out bit;
 		
-		-- To next stages
+		-- Para os proximo estagio
 		O_RegWrite : out bit;
 		O_AluOut : out bit_vector(63 downto 0);
 		O_instruction4to0 : out bit_vector(4 downto 0);
 		DMEmOut : out bit_vector(63 downto 0);
 		
-		-- To previous stages
+		-- Para estagios anteriores
 		O_Add1Out : out bit_vector(63 downto 0)		
 	);
 end Estagio_MEM;

@@ -6,13 +6,14 @@ use std.textio.all;
 entity Estagio_IF is
 	port(
 		clock: in bit;
+		reset : in bit;
 		
-		-- From pipeline/UC
+		-- Do pipeline/UC
 		PCSrc:   in bit;
 		Add1Out: in bit_vector(63 downto 0);
 		
 		
-		-- Out of stage
+		-- Saidas
 		IMemOut: out bit_vector(31 downto 0);
 		PC: out bit_vector(63 downto 0)
 	);
@@ -81,7 +82,7 @@ begin
 	mux1 : mux2to1 generic map(64) port map(s => SelecaoMux1, a => Add2Out, b => signalAdd1Out, o => Mux1Out);
 	
 	-- PC
-	programCounter : reg generic map(64) port map(clock => clock, reset => '0', load => '1', d => Mux1Out, q => signalPC);
+	programCounter : reg generic map(64) port map(clock => clock, reset => reset, load => '1', d => Mux1Out, q => signalPC);
 	
 	-- Memoria de instrucao
 	IMem : rom port map(addr => signalPC, data => signalIMemOut);
