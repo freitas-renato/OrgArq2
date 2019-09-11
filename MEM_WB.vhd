@@ -9,6 +9,7 @@ entity MEM_WB is
 		
 		-- Entradas de controle
 		I_RegWrite : in bit;
+		I_MemToReg : in bit;
 		
 		-- Saidas de dados
 		O_Alu : 					out bit_vector(63 downto 0);
@@ -16,12 +17,14 @@ entity MEM_WB is
 		O_instruction4to0 : 	out bit_vector(4 downto 0);
 		
 		-- Saidas de controle	
-		O_RegWrite : out bit
+		O_RegWrite : out bit;
+		O_MemToReg : out bit
 	);
 end MEM_WB;
 
 architecture arch of MEM_WB is
-	signal I_controlDataReg, O_controlDataReg : bit_vector(133 downto 0);
+	signal I_dataReg, O_dataReg : bit_vector(132 downto 0);
+	signal I_controlReg, O_controlReg : bit_vector(1 downto 0);
 	
 	component reg is
 		generic(
@@ -37,20 +40,21 @@ architecture arch of MEM_WB is
     end component;
 	 
 begin
-	-- Para esse registrador em especifico, nao vou separa o sinal de controle dos de dados porque por algum motivo
-	-- o Quartus acusa erro de VHDL se tentar usar um bit como bit_vector(0 downto 0)
 	
 	-- Concatenaçoes
-	I_controlDataReg <= I_RegWrite & I_Alu & I_DMem & I_instruction4to0;
+	I_dataReg <= I_Alu & I_DMem & I_instruction4to0;
+	I_controlReg <= I_RegWrite & I_MemToReg;
 	
 	-- Registradores
-	controlDataReg : reg generic map(134) port map (clock => clock, reset => '0', load => '1', d => I_controlDataReg, q => O_controlDataReg);
+	dataReg : reg generic map(133) port map (clock => clock, reset => '0', load => '1', d => I_dataReg, q => O_dataReg);
+	controlReg : reg generic map(2) port map (clock => clock, reset => '0', load => '1', d => I_controlReg, q => O_controlReg);
 	
 	-- Saidas
-	O_RegWrite <= O_controlDataReg(133);
+	O_RegWrite <= O_controlReg(1);
+	O_MemToReg <= O_controlReg(0);
 	
-	O_Alu <= O_controlDataReg(132 downto 69);
-	O_DMem <= O_controldataReg(68 downto 5);
-	O_instruction4to0 <= O_controldataReg(4 downto 0);
+	O_Alu <= O_dataReg(132 downto 69);
+	O_DMem <= O_dataReg(68 downto 5);
+	O_instruction4to0 <= O_dataReg(4 downto 0);
 
 end arch;

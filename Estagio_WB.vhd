@@ -6,16 +6,23 @@ use std.textio.all;
 entity Estagio_WB is
 	port(
 	
-		-- From pipeline/UC
-		AluOut: in bit_vector(63 downto 0);
-		DMemOut: in bit_vector(63 downto 0);
-		Instruction4to0In: in bit_vector(4 downto 0);
+		-- Entradas de estagios anteriores
+		AluOut: 					in bit_vector(63 downto 0);
+		DMemOut: 				in bit_vector(63 downto 0);
+		Instruction4to0In: 	in bit_vector(4 downto 0);
+		
+		-- Entradas de controle para o estagio WB
 		MemtoReg: in bit;
 		
-		-- Saidas
-		Instruction4to0: out bit_vector(4 downto 0);
-		Mux3Out: out bit_vector(63 downto 0)
-	
+		-- Entradas de controle para estagios anteriores
+		I_RegWrite : in bit;
+		
+		-- Saidas de dados
+		Instruction4to0: 	out bit_vector(4 downto 0);
+		Mux3Out: 			out bit_vector(63 downto 0);
+		
+		-- Saidas de controle
+		O_RegWrite : out bit
 	);
 end Estagio_WB;
 
@@ -48,5 +55,6 @@ begin
 	Instruction4to0 <= Instruction4to0In;
 	Mux3Out <= signalMux3Out;
 	
+	O_RegWrite <= I_RegWrite;
 
 end E_WB;

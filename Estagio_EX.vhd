@@ -20,7 +20,8 @@ entity Estagio_EX is
 		
 		-- Da UC para os estagios seguintes
 		I_branch : 		in bit;
-		I_mem_wr : 		in bit;
+		I_mem_w:       in bit;
+		I_mem_r:       in bit;
 		I_memToReg: 	in bit;
 		I_regWrite:    in bit;
 		
@@ -33,7 +34,8 @@ entity Estagio_EX is
 		
 		-- Saidas de controle
 		O_branch : 		out bit;
-		O_mem_wr : 		out bit;
+		O_mem_w :      out bit;
+		O_mem_r :      out bit;
 		O_memToReg: 	out bit;
 		O_regWrite:    out bit
 	);
@@ -107,7 +109,8 @@ begin
 	-- Saidas de controle
 	ZeroAlu <= signalZeroAlu;
 	O_branch <= I_branch;
-	O_mem_wr <= I_mem_wr;
+	O_mem_w <= I_mem_w;
+	O_mem_r <= I_mem_r;
 	O_memToReg <= I_memToReg;
 	O_regWrite <= I_regWrite;
 

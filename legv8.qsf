@@ -38,7 +38,7 @@
 
 set_global_assignment -name FAMILY "Cyclone V"
 set_global_assignment -name DEVICE 5CGXFC7C7F23C8
-set_global_assignment -name TOP_LEVEL_ENTITY MEM_WB
+set_global_assignment -name TOP_LEVEL_ENTITY pipeline
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 18.1.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "00:29:26  AUGUST 22, 2019"
 set_global_assignment -name LAST_QUARTUS_VERSION "18.1.0 Lite Edition"
@@ -48,6 +48,8 @@ set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
+set_global_assignment -name VHDL_FILE pipeline.vhd
+set_global_assignment -name VHDL_FILE dataflow.vhdl
 set_global_assignment -name VHDL_FILE Estagio_IF.vhd
 set_global_assignment -name VHDL_FILE testbench_uc.vhd
 set_global_assignment -name VHDL_FILE Estagio_WB.vhd
@@ -59,20 +61,18 @@ set_global_assignment -name VHDL_FILE registerFile.vhd
 set_global_assignment -name VHDL_FILE reg.vhd
 set_global_assignment -name VHDL_FILE ram.vhd
 set_global_assignment -name VHDL_FILE mux2to1.vhd
-set_global_assignment -name VHDL_FILE fluxo_de_dados.vhd
 set_global_assignment -name VHDL_FILE control.vhd
 set_global_assignment -name VHDL_FILE alu_control.vhd
 set_global_assignment -name VHDL_FILE alu.vhd
-set_global_assignment -name VHDL_FILE legv8.vhd
 set_global_assignment -name VHDL_FILE Estagio_ID.vhd
 set_global_assignment -name VHDL_FILE Estagio_MEM.vhd
 set_global_assignment -name VHDL_FILE IF_ID.vhd
 set_global_assignment -name VHDL_FILE ID_EX.vhd
 set_global_assignment -name VHDL_FILE EX_MEM.vhd
 set_global_assignment -name VHDL_FILE MEM_WB.vhd
+set_global_assignment -name BDF_FILE blocos_FD.bdf
+set_global_assignment -name BDF_FILE blocos_pipeline.bdf
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
-set_global_assignment -name BDF_FILE bloco_FD.bdf
-set_global_assignment -name BDF_FILE blocos_FD.bdf
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

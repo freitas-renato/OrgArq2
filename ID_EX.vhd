@@ -4,7 +4,8 @@ entity ID_EX is
 		
 		-- Entradas de controle
 		I_branch: 			in bit;
-		I_mem_wr:			in bit;
+		I_mem_w:         	in bit;
+		I_mem_r:         	in bit;
 		I_memToReg:			in bit;
 		I_aluCtl:			in bit_vector(3 downto 0);
 		I_aluSrc:         in bit;
@@ -20,7 +21,8 @@ entity ID_EX is
 	
 		-- Saidas de controle
 		O_branch: 			out bit;
-		O_mem_wr:			out bit;
+		O_mem_w :         out bit;
+		O_mem_r :         out bit;
 		O_memToReg:			out bit;
 		O_aluCtl:			out bit_vector(3 downto 0);
 		O_aluSrc:         out bit;
@@ -38,7 +40,7 @@ end ID_EX;
 
 architecture arch of ID_EX is
 
-	signal I_controlReg, O_controlReg : bit_vector(8 downto 0);
+	signal I_controlReg, O_controlReg : bit_vector(9 downto 0);
 	signal I_dataReg, O_dataReg : bit_vector(271 downto 0); 
 	
 	component reg is
@@ -55,16 +57,17 @@ architecture arch of ID_EX is
     end component;
 	
 begin
-	I_controlReg <= I_branch & I_mem_wr & I_memToReg & I_aluCtl & I_aluSrc & I_regWrite;
+	I_controlReg <= I_branch & I_mem_w & I_mem_r & I_memToReg & I_aluCtl & I_aluSrc & I_regWrite;
 	I_dataReg <= I_instruction31to21 & I_PC & I_Reg_Alu & I_Reg_Mux2 & I_SEOut & I_instruction4to0;
 	
 	-- instanciando os registradores
-	controlReg : reg generic map(9) port map(clock => clock, reset => '0', load => '1', d => I_controlReg, q => O_controlReg);
+	controlReg : reg generic map(10) port map(clock => clock, reset => '0', load => '1', d => I_controlReg, q => O_controlReg);
 	dataReg : reg generic map(272) port map(clock => clock, reset => '0', load => '1', d => I_dataReg, q => O_dataReg);
 	
 	-- mapeando os sinais
-	O_branch <= O_controlReg(8);
-	O_mem_wr <= O_controlReg(7);
+	O_branch <= O_controlReg(9);
+	O_mem_w <= O_controlReg(8);
+	O_mem_r <= O_controlReg(8);
 	O_memToReg <= O_controlReg(6);
 	O_aluCtl <= O_controlReg(5 downto 2);
 	O_aluSrc <= O_controlReg(1);

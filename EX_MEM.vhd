@@ -11,7 +11,8 @@ entity EX_MEM is
 		-- Entradas de controle
 		I_ZeroAlu : 	in bit;
 		I_branch : 		in bit;
-		I_mem_wr : 		in bit;
+		I_mem_w : 		in bit;
+		I_mem_r : 		in bit;
 		I_memToReg: 	in bit;
 		I_regWrite:    in bit;
 		
@@ -24,7 +25,8 @@ entity EX_MEM is
 		-- Saidas de controle
 		O_ZeroAlu : 	out bit;
 		O_branch : 		out bit;
-		O_mem_wr : 		out bit;
+		O_mem_w : 		out bit;
+		O_mem_r : 		out bit;
 		O_memToReg: 	out bit;
 		O_regWrite:    out bit
 	);
@@ -32,7 +34,7 @@ end EX_MEM;
 
 architecture arch of EX_MEM is
 	
-	signal I_controlReg, O_controlReg : bit_vector(4 downto 0);
+	signal I_controlReg, O_controlReg : bit_vector(5 downto 0);
 	signal I_dataReg, O_dataReg : bit_vector(196 downto 0);
 	
 	component reg is
@@ -50,17 +52,18 @@ architecture arch of EX_MEM is
 	 
 begin
 	-- Concatenaçoes
-	I_controlReg <= I_ZeroAlu & I_branch & I_mem_wr & I_memToReg & I_regWrite;
+	I_controlReg <= I_ZeroAlu & I_branch & I_mem_w & I_mem_r & I_memToReg & I_regWrite;
 	I_dataReg <= I_Add1 & I_Alu & I_Reg_Mux2 & I_Instruction4to0;
 	
 	-- Alocaçao dos registradores
-	controlReg : reg generic map(5) port map (clock => clock, reset => '0', load => '1', d => I_controlReg, q => O_controlReg);
+	controlReg : reg generic map(6) port map (clock => clock, reset => '0', load => '1', d => I_controlReg, q => O_controlReg);
 	dataReg : reg generic map(197) port map (clock => clock, reset => '0', load => '1', d => I_dataReg, q => O_dataReg);
 	
 	-- Mapeando as saidas
-	O_ZeroAlu <= O_controlReg(4);
-	O_branch <= O_controlReg(3);
-	O_mem_wr <= O_controlReg(2);
+	O_ZeroAlu <= O_controlReg(5);
+	O_branch <= O_controlReg(4);
+	O_mem_w <= O_controlReg(3);
+	O_mem_r <= O_controlReg(2);
 	O_memToReg <= O_controlReg(1);
 	O_regWrite <= O_controlReg(0);
 	

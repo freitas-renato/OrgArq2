@@ -9,14 +9,8 @@ entity Estagio_ID is
 		
 		-- Da UC, para o estagio ID
 		Reg2Loc : in bit;
-		RegWrite : in bit;
 		
-		-- Da UC, para os proximos estagios
-		I_branch : 		 in bit;
-		I_mem_wr:         in bit;
-		I_memToReg:       in bit;
-		I_aluCtl:         in bit_vector(3 downto 0);
-		I_aluSrc:         in bit;
+		-- Sinais de controle vindos de estagios futuros
 		I_regWrite:       in bit;
 		
 		-- De estagios anteriores
@@ -24,26 +18,19 @@ entity Estagio_ID is
 		instruction : in bit_vector(31 downto 0);
 		
 		-- De estagios adiante
-		Mux3Out : in bit_vector(63 downto 0);
+		Mux3Out : 				in bit_vector(63 downto 0);
+		I_instruction4to0 : 	in bit_vector(4 downto 0);
 		
 		-- Para a UC e para o proximo estagio
 		instruction31to21: out bit_vector(10 downto 0);
 		
-		-- Para os proximos estagios
-		-- Controle
-		O_branch : 		 out bit;
-		O_mem_wr:         out bit;
-		O_memToReg:       out bit;
-		O_aluCtl:         out bit_vector(3 downto 0);
-		O_aluSrc:         out bit;
-		O_regWrite:       out bit;
-		
+		-- Para os proximos estagios	
 		-- Dados
 		O_PC : out bit_vector(63 downto 0);
 		Reg_Alu : out bit_vector(63 downto 0);
 		Reg_Mux2 : out bit_vector(63 downto 0);
 		SEOut : out bit_vector(63 downto 0);
-		instruction4to0 : out bit_vector(4 downto 0)				
+		O_instruction4to0 : out bit_vector(4 downto 0)				
 	);
 end Estagio_ID;
 
@@ -96,17 +83,10 @@ architecture ID of Estagio_ID is
 	SE : signExtend port map(i => instruction, o => SEOut);
 	
 	--register file
-	regFile : registerFile port map(Read1 => instruction(9 downto 5), Read2 => Mux4Out, WriteReg => instruction(4 downto 0), WriteData => Mux3Out, RegWrite => RegWrite, clock => clock, reset => reset, DataOut1 => Reg_Alu, DataOut2 => Reg_Mux2);
+	regFile : registerFile port map(Read1 => instruction(9 downto 5), Read2 => Mux4Out, WriteReg => I_instruction4to0, WriteData => Mux3Out, RegWrite => I_RegWrite, clock => clock, reset => reset, DataOut1 => Reg_Alu, DataOut2 => Reg_Mux2);
 	
 	-- I/O mapping
 	instruction31to21 <= instruction(31 downto 21);
-	O_branch <= I_branch;
-	O_mem_wr <= I_mem_wr;
-	O_memToReg <= I_memToReg;
-	O_aluCtl <= I_aluCtl;
-	O_aluSrc <= I_aluSrc;
-	O_regWrite <= I_regWrite;
-	O_PC <= I_PC;
-	instruction4to0 <= instruction(4 downto 0);
+	O_instruction4to0 <= instruction(4 downto 0);
 	
 end ID;

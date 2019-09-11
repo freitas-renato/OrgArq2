@@ -7,11 +7,13 @@ entity Estagio_MEM is
 		clock : in bit;
 	
 		-- Da UC, para o estagio MEM
-		mem_wr : in bit;
+		mem_w : in bit;
+		mem_r : in bit;
 		branch : in bit;
 		
 		-- Da UC, para o estagio seguinte
 		I_RegWrite : in bit;
+		I_MemToReg : in bit;
 		
 		-- De estagios anteriores
 		I_AluOut : in bit_vector(63 downto 0);
@@ -24,6 +26,7 @@ entity Estagio_MEM is
 		PC_src : out bit;
 		
 		-- Para os proximo estagio
+		O_MemToReg : out bit;
 		O_RegWrite : out bit;
 		O_AluOut : out bit_vector(63 downto 0);
 		O_instruction4to0 : out bit_vector(4 downto 0);
@@ -54,11 +57,12 @@ architecture arch of Estagio_MEM is
 	begin
 	
 	-- RAM
-	DMem : ram generic map (addressSize => 64, wordSize => 64) port map (ck => clock, wr => mem_wr, addr => I_AluOut, data_I => Reg_Mux2, data_O => DMemOut); 
+	DMem : ram generic map (addressSize => 64, wordSize => 64) port map (ck => clock, wr => mem_w, addr => I_AluOut, data_I => Reg_Mux2, data_O => DMemOut); 
 	
 	--I/O mapping
 	PC_src_signal <= branch and ZeroAlu;
 	PC_src <= PC_src_signal;
+	O_MemToReg <= I_MemToReg;
 	O_RegWrite <= I_RegWrite;
 	O_AluOut <= I_AluOut;
 	O_instruction4to0 <= I_instruction4to0;
