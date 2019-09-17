@@ -30,11 +30,14 @@ begin
     altb    when "0111", -- SET ON LESS THAN A<B?1:0
     A nor B when "1100", -- NOR
     (others=>'0') when others;
+
   -- Generating A<B?1:0
   altb(63 downto 1) <= (others=>'0');
   altb(0) <= '1' when (A<B) else '0';
+
   -- Generating zero flag
-  Z <= '1' when (aluout=0) else '0';
+  Z <= '1' when (aluout=0) or (S = "1111") else '0';
+  
   -- Copying temporary signal to output
   F <= aluout;
 end architecture functional;
