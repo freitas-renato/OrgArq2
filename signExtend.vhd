@@ -28,6 +28,7 @@ architecture combinational of signExtend is
     signal alu_imm: bit_vector(11 downto 0) := (others => '0');
     signal dt_addr: bit_vector(8 downto 0)  := (others => '0');
     signal br_addr: bit_vector(18 downto 0) := (others => '0');
+	 signal o_sig1, o_sig2, o_sig3 : bit_vector(ws_out - 1 downto 0) := (others => '0');
 
 begin
 
@@ -41,16 +42,19 @@ begin
     -- 1011001000 -- orri
 
     with i(31 downto 22) select i_type <=
-        '1' when "1001000100" or "1101000100" or "1001001000" or "1011001000",
+        '1' when "1001000100" | "1101000100" | "1001001000" | "1011001000",
         '0' when others;
 
-    d_type  <= '1' when (i(26) = '0') and not(i_type) else '0';
-    cb_tybe <= '1' when (i(26) = '1') and not (i_type) else '0';
-
-
-    o <= bit_vector(resize(signed(alu_imm)), o'length) when i_type = '1' else
-         bit_vector(resize(signed(dt_addr)), o'length) when d_type = '1' else
-         bit_vector(resize(signed(br_addr)), o'length) when cb_type = '1' else
+    d_type  <= '1' when ((i(26) = '0') and (i_type = '0')) else '0';
+    cb_type <= '1' when ((i(26) = '1') and (i_type = '0')) else '0';
+	
+	 o_sig1 <= bit_vector(resize(signed(alu_imm), o'length));
+	 o_sig2 <= bit_vector(resize(signed(dt_addr), o'length));
+	 o_sig3 <= bit_vector(resize(signed(br_addr), o'length));
+	 
+    o <= o_sig1 when i_type = '1' else
+         o_sig2 when d_type = '1' else
+         o_sig3 when cb_type = '1' else
          (others => '0');
 
 end combinational;

@@ -85,7 +85,7 @@ begin
 	programCounter : reg generic map(64) port map(clock => clock, reset => reset, load => '1', d => Mux1Out, q => signalPC);
 	
 	-- Memoria de instrucao
-	IMem : rom port map(addr => signalPC, data => signalIMemOut);
+	IMem : rom generic map (mifFileName => "rom.txt") port map(addr => signalPC, data => signalIMemOut);
 	
 	-- Somador numero 2 (vulgo a imagem do monociclo)
 	add2 : alu port map(A => signalPC, B => sinal4bits, F => Add2Out, S => "0010", Z => open);
