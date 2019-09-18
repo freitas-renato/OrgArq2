@@ -3,7 +3,7 @@ use IEEE.std_logic_1164.all;
 use IEEE.numeric_bit.all;
 
 entity TB_ID is
-end entity;
+end TB_ID;
 
 architecture testbench of TB_ID is
 	component Estagio_ID is
@@ -41,7 +41,7 @@ architecture testbench of TB_ID is
 	--signals
 	signal clock, reset, Reg2Loc, I_RegWrite : bit := '0';
 	signal I_PC, Mux3Out, O_PC, Reg_Alu, Reg_Mux2, SEOut : bit_vector(63 downto 0) := (others => '0');
-	signal instruction : bit_vector(32 downto 0) := (others => '0');
+	signal instruction : bit_vector(31 downto 0) := (others => '0');
 	signal I_instruction4to0, O_instruction4to0 : bit_vector(4 downto 0) := (others => '0');
 	signal instruction31to21 : bit_vector(10 downto 0) := (others => '0');
 	
@@ -68,28 +68,46 @@ architecture testbench of TB_ID is
 		-- constants
 		
 		begin
-		-- 1) reset
-		reset <= '1';
-		wait for 25	ns;
-		reset <= '0';
-		wait for 5 ns;
-		
-		-- 2) escrita e leitura do Register File. Escrevendo "111...1" no registrador 1 e "01010101...01" no registrador 2
-		I_regWrite <= '1';
-		
-		Mux3Out <= "1111111111111111111111111111111111111111111111111111111111111111";
-		I_instruction4to0 <= "00001";
-		wait for 50 ns;
-		
-		Mux3Out <= "0101010101010101010101010101010101010101010101010101010101010101";
-		I_instruction4to0 <= "00010";		
-		wait for 60 ns;
-		
-		I_regWrite <= '0';
-		-- Testaremos com uma operação ADD $3,$2,$1 (Rd = Rm + Rn)
-		instruction <= "10001011000" & "00010" & "000000" & "00001" & "00011";
-		--					   opcode        Rm(R2)    shamt     Rn(R1)       Rd
-		wait for 40 ns;
+			-- 1) reset
+			reset <= '1';
+			wait for 45 ns;
+			reset <= '0';
+			wait for 5 ns;
+			
+--			-- 2) escrita e leitura do Register File. Escrevendo "111...1" no registrador 1 e "01010101...01" no registrador 2
+--			I_regWrite <= '1';
+--			
+--			Mux3Out <= "1111111111111111111111111111111111111111111111111111111111111111";
+--			I_instruction4to0 <= "00001";
+--			wait for 40 ns;
+--			
+--			I_instruction4to0 <= "00010";
+--			wait for 10 ns;
+--			Mux3Out <= "0101010101010101010101010101010101010101010101010101010101010101";		
+--			wait for 60 ns;
+--			
+--			I_regWrite <= '0';
+--			-- Testaremos com uma operação ADD $3,$2,$1 (Rd = Rm + Rn)
+--			instruction <= "10001011000" & "00010" & "000000" & "00001" & "00011";
+--			--					   opcode        Rm(R2)    shamt     Rn(R1)       Rd
+--			wait for 40 ns;
+			
+			-- 3) Teste do SignExtend
+			-- ADDI
+			instruction <= "1001000100" & "000000000001" & "00001" & "00011";
+  			--					   opcode         imediato       Rn(R1)     Rd
+			wait for 40 ns;
+			
+			-- LDUR
+			instruction <= "11111000010" & "001110000" & "00" & "00001" & "00011";
+			--					    opcode			 offset      op	    Rn	    Rt
+			wait for 40 ns;
+			
+			-- B
+			instruction <= "101000" & "11111111110000000000000000";
+			--					 opcode				offset branch
+			wait for 40 ns;
+			wait;
   		
 		end process testbench_process;
 
