@@ -7,7 +7,7 @@ entity registerFile is -- incluir um sinal de RESET ?
   port (
     Read1, Read2, WriteReg: in bit_vector(4 downto 0); --inputs
 	 WriteData : in bit_vector(63 downto 0);
-	 RegWrite, clock: in bit; --sinais de controle
+	 RegWrite, clock, reset: in bit; --sinais de controle
 	 DataOut1, DataOut2: out bit_vector(63 downto 0)
     );
 	 
@@ -73,7 +73,7 @@ architecture arch of registerFile is
 		)
 		port map(
 			clock => clock,
-			reset => '0',
+			reset => reset,
 			load => loadSelection(I),
 			d => WriteData,
 			q => dataBus(I)
