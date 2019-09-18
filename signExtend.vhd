@@ -23,35 +23,34 @@ entity signExtend is
 end signExtend;
 
 architecture combinational of signExtend is
-    signal length, start: natural := 0;
+    signal i_type, d_type, cb_type: bit := '0';
 
-    signal dt_address: bit_vector(8 downto 0) := (others => '0');
-    signal br_address: bit_vector(18 downto 0):= (others => '0');
+    signal alu_imm: bit_vector(11 downto 0) := (others => '0');
+    signal dt_addr: bit_vector(8 downto 0)  := (others => '0');
+    signal br_addr: bit_vector(18 downto 0) := (others => '0');
 
 begin
 
-    dt_address <= i(20 downto 12);
-    br_address <= i(23 downto 5);
+    alu_imm <= i(21 downto 10);
+    dt_addr <= i(20 downto 12);
+    br_addr <= i(23 downto 5);
 
-    o <= bit_vector(resize(signed(dt_address), o'length)) when i(26) = '0' else
-         bit_vector(resize(signed(br_address), o'length)) when i(26) = '1' else
+    -- 1001000100 -- addi
+    -- 1101000100 -- subi
+    -- 1001001000 -- andi
+    -- 1011001000 -- orri
+
+    with i(31 downto 22) select i_type <=
+        '1' when "1001000100" or "1101000100" or "1001001000" or "1011001000",
+        '0' when others;
+
+    d_type  <= '1' when (i(26) = '0') and not(i_type) else '0';
+    cb_tybe <= '1' when (i(26) = '1') and not (i_type) else '0';
+
+
+    o <= bit_vector(resize(signed(alu_imm)), o'length) when i_type = '1' else
+         bit_vector(resize(signed(dt_addr)), o'length) when d_type = '1' else
+         bit_vector(resize(signed(br_addr)), o'length) when cb_type = '1' else
          (others => '0');
-
-    -- with i(26) select length <=
-    --     9  when '0',
-    --     19 when '1';
-
-    -- with i(26) select start <=
-    --     12 when '0',
-    --     5  when '1';
-
-    -- lsb: for idx in start to (length - 1) generate
-    --     o(idx - start) <= i(idx);
-    -- end generate;
-
-    -- msb: for idx in (length) to (o'length - 1) generate
-    --     o(idx) <= i(length - 1 + start);
-    -- end generate;
-
 
 end combinational;
