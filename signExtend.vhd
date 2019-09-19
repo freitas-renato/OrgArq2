@@ -23,18 +23,20 @@ entity signExtend is
 end signExtend;
 
 architecture combinational of signExtend is
-    signal i_type, d_type, cb_type: bit := '0';
+    signal i_type, d_type, cb_type, b_type: bit := '0';
 
     signal alu_imm: bit_vector(11 downto 0) := (others => '0');
     signal dt_addr: bit_vector(8 downto 0)  := (others => '0');
-    signal br_addr: bit_vector(18 downto 0) := (others => '0');
-	 signal o_sig1, o_sig2, o_sig3 : bit_vector(ws_out - 1 downto 0) := (others => '0');
+    signal cond_br_addr: bit_vector(18 downto 0) := (others => '0');
+	 signal br_addr : bit_vector(25 downto 0) := (others => '0');
+	 signal o_alu_imm, o_dt, o_cond_br, o_br : bit_vector(ws_out - 1 downto 0) := (others => '0');
 
 begin
 
     alu_imm <= i(21 downto 10);
     dt_addr <= i(20 downto 12);
-    br_addr <= i(23 downto 5);
+    cond_br_addr <= i(23 downto 5);
+	 br_addr <= i(25 downto 0);
 
     -- 1001000100 -- addi
     -- 1101000100 -- subi
@@ -45,16 +47,19 @@ begin
         '1' when "1001000100" | "1101000100" | "1001001000" | "1011001000",
         '0' when others;
 
-    d_type  <= '1' when ((i(26) = '0') and (i_type = '0')) else '0';
+    b_type <= '1' when ((i(31 downto 29) = "101")) else '0';
+	 d_type  <= '1' when ((i(26) = '0') and (i_type = '0')) else '0';
     cb_type <= '1' when ((i(26) = '1') and (i_type = '0')) else '0';
 	
-	 o_sig1 <= bit_vector(resize(signed(alu_imm), o'length));
-	 o_sig2 <= bit_vector(resize(signed(dt_addr), o'length));
-	 o_sig3 <= bit_vector(resize(signed(br_addr), o'length));
+	 o_alu_imm <= bit_vector(resize(signed(alu_imm), o'length));
+	 o_dt <= bit_vector(resize(signed(dt_addr), o'length));
+	 o_cond_br <= bit_vector(resize(signed(cond_br_addr), o'length));
+	 o_br <= bit_vector(resize(signed(br_addr), o'length));
 	 
-    o <= o_sig1 when i_type = '1' else
-         o_sig2 when d_type = '1' else
-         o_sig3 when cb_type = '1' else
+    o <= o_cond_br when cb_type = '1' else
+			o_br when b_type = '1' else
+			o_alu_imm when i_type = '1' else
+         o_dt when d_type = '1' else		
          (others => '0');
 
 end combinational;

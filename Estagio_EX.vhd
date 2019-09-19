@@ -43,7 +43,7 @@ end Estagio_EX;
 
 architecture E_EX of Estagio_EX is
 
-	signal signalPC, signalReg_Alu, signalReg_Mux2, Mux2Out, signalSEOut, SL2_Add1, signalAdd1Out, signalAluOut: bit_vector(63 downto 0);
+	signal signalPC, signalReg_Mux2, Mux2Out, signalSEOut, SL2_Add1, signalAdd1Out, signalAluOut: bit_vector(63 downto 0);
 	signal aluSrc, signalZeroAlu : bit;
 	signal signalSelecaoALU : bit_vector(3 downto 0);
 	
@@ -81,7 +81,6 @@ begin
 
 	-- Alocacao de pinos para sinais
 	signalPC <= PC;
-	signalReg_Alu <= Reg_Alu;
 	signalReg_Mux2 <= Reg_Mux2In;
 	aluSrc <= alu_Src;
 	signalSelecaoALU <= SelecaoALU;
@@ -98,13 +97,11 @@ begin
 	add1 : alu port map(A => signalPC, B => SL2_Add1, F => Add1Out, S => "0010", Z => open);
 	
 	-- ALU numero 1 (vulgo imagem do monociclo)
-	alu1 : alu port map(A => Reg_Alu, B => Mux2Out, F => signalAluOut, S => signalSelecaoALU, Z => signalZeroAlu);
+	alu1 : alu port map(A => Reg_Alu, B => Mux2Out, F => AluOut, S => signalSelecaoALU, Z => signalZeroAlu);
 
 	-- Saidas de dados
 	Instruction4to0 <= Instruction4to0In;
 	Reg_Mux2 <= Reg_Mux2In;
-	Add1Out <= signalAdd1Out;
-	AluOut <= signalAluOut;
 	
 	-- Saidas de controle
 	ZeroAlu <= signalZeroAlu;

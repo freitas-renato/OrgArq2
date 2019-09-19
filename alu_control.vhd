@@ -22,11 +22,11 @@ begin
                  "00";
 
 
-    alu_function <=  "0010" when alu_op = "00" else -- LDUR/STUR
-                     "0111" when alu_op = "01" else -- CBZ
-                     "0010" when alu_op = "10" and operation = "00" else
-                     "0110" when alu_op = "10" and operation = "01" else
-                     "0000" when alu_op = "10" and operation = "10" else
-                     "0001" when alu_op = "10" and operation = "11" else
-                     "0000";
+    alu_function <=  "0010" when alu_op = "00" else -- LDUR/STUR (ADD)
+                     "0111" when alu_op = "01" else -- CBZ (SET ON LESS THAN A<B? ? 1:0)
+                     "0010" when alu_op = "10" and operation = "00" else -- (ADD)
+                     "0110" when alu_op = "10" and operation = "01" else -- (SUB)
+                     "0000" when alu_op = "10" and operation = "10" else -- (AND)
+                     "0001" when alu_op = "10" and operation = "11" else -- (OR)
+                     "0000"; -- (AND)
 end architecture;

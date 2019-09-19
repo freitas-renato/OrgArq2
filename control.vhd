@@ -85,16 +85,25 @@ begin
                     aluSrc          <= '1'; -- DT_address
                     regWrite        <= '1';
 
-                when to_integer(unsigned(bit_vector'("10110100000"))) to to_integer(unsigned(bit_vector'("10110100111"))) => -- CBZs
+                when to_integer(unsigned(bit_vector'("10110100000"))) to to_integer(unsigned(bit_vector'("10110101111"))) => -- CBZ, CBNZ
                     reg2loc         <= '0';
                     branch          <= '1';
                     mem_w           <= '0';
                     memToReg        <= '0';
                     alu_op          <= "01"; -- enable zero flag
-                    aluSrc          <= '1'; -- BR_address 
+                    aluSrc          <= '1'; -- COND_BR_address 
                     regWrite        <= '0';
 
-                when others =>
+                when to_integer(unsigned(bit_vector'("00010100000"))) to to_integer(unsigned(bit_vector'("00010111111"))) => -- B
+						  reg2loc         <= '0';
+                    branch          <= '1';
+                    mem_w           <= '0';
+                    memToReg        <= '0';
+                    alu_op          <= "00"; -- add operation
+                    aluSrc          <= '1'; -- BR_address 
+                    regWrite        <= '0';
+						  
+					 when others =>
                     reg2loc         <= '0';
                     branch          <= '0';
                     mem_w           <= '0';

@@ -88,6 +88,7 @@ begin
 	IMem : rom generic map (mifFileName => "rom.txt", addressSize => 64) port map(addr => signalPC, data => signalIMemOut);
 	
 	-- Somador numero 2 (vulgo a imagem do monociclo)
+	sinal4bits <= (2 => '1', others => '0');
 	add2 : alu port map(A => signalPC, B => sinal4bits, F => Add2Out, S => "0010", Z => open);
 	
 	--Alocacao de pinos de saida

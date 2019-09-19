@@ -88,5 +88,6 @@ architecture ID of Estagio_ID is
 	-- I/O mapping
 	instruction31to21 <= instruction(31 downto 21);
 	O_instruction4to0 <= instruction(4 downto 0);
+	O_PC <= I_PC;
 	
 end ID;

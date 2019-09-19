@@ -107,6 +107,12 @@ architecture testbench of TB_ID is
 			instruction <= "101000" & "11111111110000000000000000";
 			--					 opcode				offset branch
 			wait for 40 ns;
+			
+			-- CBZ
+			instruction <= "10110100" & "0000000000000111000" & "00010";
+			--					  opcode			 cond_br_address         Rt
+			wait for 40 ns;
+			
 			wait;
   		
 		end process testbench_process;
